@@ -1,0 +1,17 @@
+﻿@using Proniaaa.Models
+@model Category
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" class="form-control">
+
+        </div>
+        <div class="form-group">
+            <label asp-for="products">Products</label>
+            <input asp-for="products" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
