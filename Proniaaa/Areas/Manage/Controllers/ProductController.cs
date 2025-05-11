@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Proniaaa.DAL;
 using Proniaaa.Models;
@@ -7,6 +8,7 @@ using Proniaaa.Utils.Extentions;
 namespace Proniaaa.Areas.Manage.Controllers
 {
     [Area("Manage")]
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         AppDbContext _context;
@@ -52,15 +54,27 @@ namespace Proniaaa.Areas.Manage.Controllers
             {
                 product.file.CopyTo(stream);
             }
-            product.ImgUrl = product.file.Createfile(_environment.WebRootPath,"images/Product");
+            product.ImgUrl = filename;
 
 
-            await _context.products.AddRangeAsync(product);
+            await _context.products.AddAsync(product);
             await _context.SaveChangesAsync();
 
 
 
             return RedirectToAction("index");
+        }
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product =await _context.products.FirstOrDefaultAsync(product => product.Id == id);
+            if (product == null)
+            {
+                return View("Error");
+            }
+            product.ImgUrl.RemoveFile(_environment.WebRootPath, "images/Product");
+            _context.products.Remove(product);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
     }

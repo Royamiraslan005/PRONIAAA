@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Proniaaa.DAL;
+using Proniaaa.Models;
 
 namespace Proniaaa
 {
@@ -12,6 +14,17 @@ namespace Proniaaa
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
             });
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
+            {
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._@";
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequireNonAlphanumeric = true;
+                opt.Password.RequiredLength = 6;
+                opt.Lockout.AllowedForNewUsers = true;
+                opt.Lockout.MaxFailedAccessAttempts = 3;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 
             builder.Services.AddControllersWithViews();

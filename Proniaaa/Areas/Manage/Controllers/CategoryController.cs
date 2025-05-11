@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Proniaaa.DAL;
 using Proniaaa.Models;
@@ -6,6 +7,7 @@ using Proniaaa.Models;
 namespace Proniaaa.Areas.Manage.Controllers
 {
     [Area("Manage")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         AppDbContext _context;
